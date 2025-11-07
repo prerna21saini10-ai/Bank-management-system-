@@ -1,0 +1,147 @@
+#include <iostream>
+#include <vector>
+#include <string>
+
+using namespace std;
+
+// Task class to store description and completion status
+class Task {
+private:
+    string description;
+    bool completed;
+
+public:
+    // Constructor
+    Task(string desc) {
+        description = desc;
+        completed = false;
+    }
+
+    // Mark task as completed
+    void markCompleted() {
+        completed = true;
+    }
+
+    // Display task
+    void display(int index) const {
+        cout << index + 1 << ". " << description 
+             << " - " << (completed ? "Completed" : "Pending") << endl;
+    }
+
+    // Getter for description
+    string getDescription() const {
+        return description;
+    }
+};
+
+// ToDoList class to manage multiple tasks
+class ToDoList {
+private:
+    vector<Task> tasks;
+
+public:
+    // Add new task
+    void addTask() {
+        string desc;
+        cout << "Enter task description: ";
+        cin.ignore();
+        getline(cin, desc);
+
+        if (desc.empty()) {
+            cout << "Task description cannot be empty!" << endl;
+        } else {
+            tasks.push_back(Task(desc));
+            cout << "Task added successfully!" << endl;
+        }
+    }
+
+    // View all tasks
+    void viewTasks() const {
+        if (tasks.empty()) {
+            cout << "No tasks in the list." << endl;
+            return;
+        }
+
+        cout << "\n--- Task List ---" << endl;
+        for (size_t i = 0; i < tasks.size(); ++i) {
+            tasks[i].display(i);
+        }
+    }
+
+    // Mark task as completed
+    void markTaskCompleted() {
+        if (tasks.empty()) {
+            cout << "No tasks to mark as completed." << endl;
+            return;
+        }
+
+        int index;
+        cout << "Enter task number to mark as completed: ";
+        cin >> index;
+
+        if (index > 0 && index <= (int)tasks.size()) {
+            tasks[index - 1].markCompleted();
+            cout << "Task marked as completed!" << endl;
+        } else {
+            cout << "Invalid task number." << endl;
+        }
+    }
+
+    // Delete a task
+    void deleteTask() {
+        if (tasks.empty()) {
+            cout << "No tasks to delete." << endl;
+            return;
+        }
+
+        int index;
+        cout << "Enter task number to delete: ";
+        cin >> index;
+
+        if (index > 0 && index <= (int)tasks.size()) {
+            cout << "Deleted: " << tasks[index - 1].getDescription() << endl;
+            tasks.erase(tasks.begin() + (index - 1));
+        } else {
+            cout << "Invalid task number." << endl;
+        }
+    }
+};
+
+// Main function
+int main() {
+    ToDoList todo;
+    int choice;
+
+    while (true) {
+        cout << "\n--- To-Do List Menu ---" << endl;
+        cout << "1. Add Task" << endl;
+        cout << "2. View Tasks" << endl;
+        cout << "3. Mark Task as Completed" << endl;
+        cout << "4. Delete Task" << endl;
+        cout << "5. Exit" << endl;
+        cout << "Choose an option (1-5): ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                todo.addTask();
+                break;
+            case 2:
+                todo.viewTasks();
+                break;
+            case 3:
+                todo.markTaskCompleted();
+                break;
+            case 4:
+                todo.deleteTask();
+                break;
+            case 5:
+                cout << "Exiting To-Do List. Goodbye!" << endl;
+                return 0;
+            default:
+                cout << "Invalid choice. Please select 1-5." << endl;
+        }
+    }
+
+    return 0;
+}
